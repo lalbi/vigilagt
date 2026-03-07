@@ -16,9 +16,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!data) return { title: 'Político no encontrado — VIGILAGT' }
 
   return {
-    title: `${data.nombre_completo} — VIGILAGT`,
-    description: data.resumen ?? `Perfil político de ${data.nombre_completo}. Historial, casos y votaciones en VIGILAGT.`,
-  }
+    title: `${(data as any).nombre_completo} — VIGILAGT`,
+    description: data.resumen ?? `Perfil político de ${data.nombre_completo}. Historial, casos y votaciones en VIGILAGT.`, 
 }
 
 export default async function PerfilPage({ params }: { params: Promise<{ slug: string }> }) {
