@@ -20,7 +20,7 @@ export default function ReportarPage() {
     if (!form.descripcion || !form.tipo) return
     setEstado('enviando')
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('reportes_ciudadanos')
       .insert([{
         nombre_politico: form.nombre_politico || null,
