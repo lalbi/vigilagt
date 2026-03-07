@@ -33,6 +33,7 @@ export default async function PerfilPage({ params }: { params: Promise<{ slug: s
     .single()
 
   if (!politico) notFound()
+    const politicoData = politico as any
 
   // Cargar relaciones en paralelo con el ID real
   const [
@@ -43,12 +44,12 @@ export default async function PerfilPage({ params }: { params: Promise<{ slug: s
     { data: promesasReal },
     { data: contratosReal },
   ] = await Promise.all([
-    supabase.from('cargos').select('*, partido:partidos(nombre,siglas)').eq('politico_id', politico.id).order('fecha_inicio', { ascending: false }),
-    supabase.from('casos').select('*').eq('politico_id', politico.id).eq('publicado', true).order('fecha_inicio', { ascending: false }),
-    supabase.from('votaciones').select('*').eq('politico_id', politico.id).order('fecha', { ascending: false }),
-    supabase.from('patrimonio').select('*').eq('politico_id', politico.id).order('año'),
-    supabase.from('promesas').select('*').eq('politico_id', politico.id).order('fecha', { ascending: false }),
-    supabase.from('contratos').select('*').eq('politico_id', politico.id).order('año', { ascending: false }),
+    supabase.from('cargos').select('*, partido:partidos(nombre,siglas)').eq('politico_id', politicoData.id).order('fecha_inicio', { ascending: false }),
+    supabase.from('casos').select('*').eq('politico_id', politicoData.id).eq('publicado', true).order('fecha_inicio', { ascending: false }),
+    supabase.from('votaciones').select('*').eq('politico_id', politicoData.id).order('fecha', { ascending: false }),
+    supabase.from('patrimonio').select('*').eq('politico_id', politicoData.id).order('año'),
+    supabase.from('promesas').select('*').eq('politico_id', politicoData.id).order('fecha', { ascending: false }),
+    supabase.from('contratos').select('*').eq('politico_id', politicoData.id).order('año', { ascending: false }),
   ])
 
   const scoreColor = (politico.indice_integridad ?? 5) <= 4
@@ -255,7 +256,7 @@ export default async function PerfilPage({ params }: { params: Promise<{ slug: s
           ¿Tiene información verificable sobre {politico.nombre_corto ?? politico.nombre_completo.split(' ')[0]}?
         </p>
         <Link
-          href={`/reportar?politico=${politico.id}&nombre=${encodeURIComponent(politico.nombre_completo)}`}
+          href={`/reportar?politico=${politicoData.id}&nombre=${encodeURIComponent(politico.nombre_completo)}`}
           className="inline-flex items-center gap-2 bg-red-900/20 border border-red-800/40 text-red-400 hover:bg-red-900/30 text-sm font-semibold px-6 py-2.5 rounded-md transition-colors"
         >
           ⚠️ Enviar reporte sobre este perfil
