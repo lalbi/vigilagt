@@ -52,14 +52,14 @@ export default async function PerfilPage({ params }: { params: Promise<{ slug: s
     supabase.from('contratos').select('*').eq('politico_id', politicoData.id).order('año', { ascending: false }),
   ])
 
-  const scoreColor = (politico.indice_integridad ?? 5) <= 4
+  const scoreColor = (politicoData.indice_integridad ?? 5) <= 4
     ? '#e05252'
-    : (politico.indice_integridad ?? 5) <= 6
+    : (politicoData.indice_integridad ?? 5) <= 6
     ? '#e07a3a'
     : '#4caf7d'
 
-  const edad = politico.fecha_nacimiento
-    ? new Date().getFullYear() - new Date(politico.fecha_nacimiento).getFullYear()
+  const edad = politicoData.fecha_nacimiento
+    ? new Date().getFullYear() - new Date(politicoData.fecha_nacimiento).getFullYear()
     : null
 
   return (
@@ -71,7 +71,7 @@ export default async function PerfilPage({ params }: { params: Promise<{ slug: s
         {' › '}
         <Link href="/politicos" className="hover:text-white">Directorio</Link>
         {' › '}
-        <span className="text-[#8a94a8]">{politico.nombre_completo}</span>
+        <span className="text-[#8a94a8]">{politicoData.nombre_completo}</span>
       </div>
 
       {/* CABECERA DEL PERFIL */}
@@ -79,29 +79,29 @@ export default async function PerfilPage({ params }: { params: Promise<{ slug: s
         <div className="flex items-start gap-6">
           {/* Avatar */}
           <div className="w-20 h-20 rounded-lg bg-[#1e2530] flex items-center justify-center text-[#1B3A6B] font-playfair font-bold text-3xl flex-shrink-0 overflow-hidden border border-[#252d3a]">
-            {politico.foto_url ? (
-              <img src={politico.foto_url} alt="" className="w-full h-full object-cover" />
+            {politicoData.foto_url ? (
+              <img src={politicoData.foto_url} alt="" className="w-full h-full object-cover" />
             ) : (
-              politico.nombre_completo.split(' ').map((n: string) => n[0]).slice(0, 2).join('')
+              politicoData.nombre_completo.split(' ').map((n: string) => n[0]).slice(0, 2).join('')
             )}
           </div>
 
           {/* Datos principales */}
           <div className="flex-1">
             <h1 className="font-playfair text-3xl font-black text-white">
-              {politico.nombre_completo}
+              {politicoData.nombre_completo}
             </h1>
             <div className="font-mono text-sm text-[#1B3A6B] mt-1">
-              {politico.cargo_actual ?? 'Sin cargo actual'}
+              {politicoData.cargo_actual ?? 'Sin cargo actual'}
             </div>
             <div className="flex flex-wrap gap-4 mt-3 text-sm text-[#8a94a8]">
               {edad && <span>🎂 {edad} años</span>}
-              {politico.profesion && <span>🎓 {politico.profesion}</span>}
+              {politicoData.profesion && <span>🎓 {politicoData.profesion}</span>}
               {(politico as any).partido_actual && (
                 <span>🏛️ {(politico as any).partido_actual.siglas}</span>
               )}
-              {politico.en_politica_desde && (
-                <span>📅 En política desde {politico.en_politica_desde}</span>
+              {politicoData.en_politica_desde && (
+                <span>📅 En política desde {politicoData.en_politica_desde}</span>
               )}
             </div>
           </div>
@@ -109,7 +109,7 @@ export default async function PerfilPage({ params }: { params: Promise<{ slug: s
           {/* Índice de integridad */}
           <div className="flex-shrink-0 text-center">
             <div className="font-playfair text-4xl font-black" style={{ color: scoreColor }}>
-              {politico.indice_integridad}
+              {politicoData.indice_integridad}
             </div>
             <div className="font-mono text-[9px] text-[#5a6478] uppercase tracking-wider mt-1">
               Índice de<br />Integridad
@@ -117,9 +117,9 @@ export default async function PerfilPage({ params }: { params: Promise<{ slug: s
           </div>
         </div>
 
-        {politico.resumen && (
+        {politicoData.resumen && (
           <p className="text-sm text-[#8a94a8] mt-6 border-t border-[#1e2530] pt-4 leading-relaxed">
-            {politico.resumen}
+            {politicoData.resumen}
           </p>
         )}
       </div>
@@ -253,10 +253,10 @@ export default async function PerfilPage({ params }: { params: Promise<{ slug: s
       {/* REPORTAR */}
       <div className="mt-8 border border-[#1e2530] rounded-xl p-6 text-center">
         <p className="text-[#8a94a8] text-sm mb-4">
-          ¿Tiene información verificable sobre {politico.nombre_corto ?? politico.nombre_completo.split(' ')[0]}?
+          ¿Tiene información verificable sobre {politicoData.nombre_corto ?? politicoData.nombre_completo.split(' ')[0]}?
         </p>
         <Link
-          href={`/reportar?politico=${politicoData.id}&nombre=${encodeURIComponent(politico.nombre_completo)}`}
+          href={`/reportar?politico=${politicoData.id}&nombre=${encodeURIComponent(politicoData.nombre_completo)}`}
           className="inline-flex items-center gap-2 bg-red-900/20 border border-red-800/40 text-red-400 hover:bg-red-900/30 text-sm font-semibold px-6 py-2.5 rounded-md transition-colors"
         >
           ⚠️ Enviar reporte sobre este perfil
