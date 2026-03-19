@@ -3,14 +3,13 @@ import { createSupabaseServerClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import AdminLogout from './logout-button'
-import { supabase } from '@/lib/supabase'
 
 export default async function AdminPanel() {
   const supabaseServer = await createSupabaseServerClient()
   const { data: { user } } = await supabaseServer.auth.getUser()
   if (!user) redirect('/admin/login')
 
-  const { data: politicos, error } = await supabase
+  const { data: politicos, error } = await supabaseServer
     .from('politicos')
     .select('id, nombre_completo, cargo_actual, nivel_riesgo, indice_integridad, publicado')
     .order('nombre_completo')
