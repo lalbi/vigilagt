@@ -12,7 +12,7 @@ export default async function AdminPanel() {
 
   const { data: politicos, error } = await supabase
     .from('politicos')
-    .select('id, nombre_completo, cargo_actual, nivel_riesgo, indice_integridad, publicado, partido_actual_id')
+    .select('id, nombre_completo, cargo_actual, nivel_riesgo, indice_integridad, publicado')
     .order('nombre_completo')
 
   console.log('politicos:', politicos, 'error:', error)
